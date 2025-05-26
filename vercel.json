@@ -2,10 +2,16 @@
   "version": 2,
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
+  "builds": [
+    {
+      "src": "backend/src/main.ts",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "dest": "backend/src/main.ts"
     },
     {
       "handle": "filesystem"
