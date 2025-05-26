@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/dist",
   "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
     {
       "src": "backend/src/main.ts",
       "use": "@vercel/node"
@@ -14,16 +19,19 @@
       "dest": "/backend/src/main.ts"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/frontend/dist/assets/$1"
+      "handle": "filesystem"
     },
     {
-      "src": "/(.*)\\.(.+)",
-      "dest": "/frontend/dist/$1.$2"
+      "src": "/assets/(.*)",
+      "dest": "/dist/assets/$1"
+    },
+    {
+      "src": "/[^.]+",
+      "dest": "/dist/index.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/dist/index.html"
+      "dest": "/dist/$1"
     }
   ]
 } 
