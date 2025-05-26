@@ -15,11 +15,12 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  // Enable CORS for your frontend
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  // Enable CORS
   app.enableCors({
-    origin: [frontendUrl, 'https://*.vercel.app'], // Allow Vercel deployments
+    origin: true, // Allow all origins in development
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
   });
 
   // Global prefix for API routes
