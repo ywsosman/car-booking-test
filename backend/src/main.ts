@@ -15,19 +15,29 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  // Enable CORS
+  // Get allowed origins from environment or use default
+  const allowedOrigins = process.env.ALLOWED_ORIGINS 
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : [process.env.FRONTEND_URL || 'http://localhost:5173', 'https://car-booking-test.vercel.app'];
+
+  // Enable CORS with specific configuration
   app.enableCors({
-    origin: true, // Allow all origins in development
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   });
 
   // Global prefix for API routes
   app.setGlobalPrefix('api');
 
   // Use global validation pipe
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    whitelist: true
+  }));
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
