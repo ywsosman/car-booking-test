@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const configService = app.get(ConfigService);
 
   // Serve static files from the 'uploads' directory
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
@@ -15,15 +16,20 @@ async function bootstrap() {
   });
 
   // Enable CORS for your frontend
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
   app.enableCors({
-    origin: 'http://localhost:5173', // Change to your frontend URL
+    origin: [frontendUrl, 'https://*.vercel.app'], // Allow Vercel deployments
     credentials: true,
   });
+
+  // Global prefix for API routes
+  app.setGlobalPrefix('api');
 
   // Use global validation pipe
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(process.env.PORT ?? 3000);
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
