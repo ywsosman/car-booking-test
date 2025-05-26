@@ -11,14 +11,19 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "backend/src/main.ts"
+      "dest": "/backend/src/main.ts"
     },
     {
-      "handle": "filesystem"
+      "src": "/assets/(.*)",
+      "dest": "/frontend/dist/assets/$1"
+    },
+    {
+      "src": "/(.*)\\.(.+)",
+      "dest": "/frontend/dist/$1.$2"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/frontend/dist/index.html"
     }
   ]
 } 
